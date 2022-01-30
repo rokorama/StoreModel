@@ -10,5 +10,7 @@ namespace StoreModel
         {
             FibrePer100G = fibrePer100G;
         }
+
+
     }
 }

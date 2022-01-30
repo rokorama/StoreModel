@@ -17,10 +17,5 @@ namespace StoreModel
             WeightGrams = weightGrams;
         }
 
-        public Product()
-        {
-
-        }
-
     }
 }

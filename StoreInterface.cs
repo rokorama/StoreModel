@@ -9,11 +9,37 @@
 // Kvitas išsiunčiamas nurodytu el. paštu (Labiau advanced dalis, palieku ją patiems išsaiškinti kaip tai padaryti P.S. tai nėra taip baisu kaip gali pasirodyt)
 
 using System;
+using System.Collections.Generic;
 
 namespace StoreModel
 {
     public class StoreInterface
     {
+        decimal UserBudget { get; set; }
+        public VegetableRepo VegetableRepo;
         
+        public  StoreInterface()
+        {
+        }
+
+        public void ShowProductsInCategory(object repo)
+        {
+            // repo.PrintAllProducts();
+        }
+        
+        public void ShowBasket()
+        {
+        }
+
+        public void CompleteTransaction()
+        {
+
+        }
+
+        public void GenerateReceipt()
+        {
+
+        }
     }
+
 }
