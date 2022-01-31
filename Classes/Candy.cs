@@ -10,5 +10,19 @@ namespace StoreModel
         {
             SugarPer100G = sugarPer100G;
         }
+
+        public override string ToString()
+        {
+            return $"{this.Name},{this.Price},{this.SKU},{this.WeightGrams},{this.SugarPer100G}";
+        }
+
+        public string ToString(string lineFormatting)
+        {
+            return String.Format(lineFormatting, this.Name,
+                                                 this.Price,
+                                                 this.SKU,
+                                                 this.WeightGrams,
+                                                 this.SugarPer100G);
+        }
     }
 }

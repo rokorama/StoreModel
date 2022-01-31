@@ -11,6 +11,18 @@ namespace StoreModel
             FibrePer100G = fibrePer100G;
         }
 
+        public override string ToString()
+        {
+            return $"{this.Name},{this.Price},{this.SKU},{this.WeightGrams},{this.FibrePer100G}";
+        }
 
+        public string ToString(string lineFormatting)
+        {
+            return String.Format(lineFormatting, this.Name,
+                                                 this.Price,
+                                                 this.SKU,
+                                                 this.WeightGrams,
+                                                 this.FibrePer100G);
+        }
     }
 }

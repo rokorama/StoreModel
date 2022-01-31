@@ -48,10 +48,10 @@ namespace StoreModel
         public void PrintVegetable(Vegetable entry, string lineFormatting)
         {
             Console.WriteLine(String.Format(lineFormatting, entry.Name,
-                                                                    entry.Price,
-                                                                    entry.SKU.ToString("D6"),
-                                                                    entry.WeightGrams,
-                                                                    entry.FibrePer100G));
+                                                            entry.Price,
+                                                            entry.SKU.ToString("D6"),
+                                                            entry.WeightGrams,
+                                                            entry.FibrePer100G));
         }
 
         public void PrintAllVegetables()
@@ -64,17 +64,55 @@ namespace StoreModel
             } 
         }
 
-        public void PrintAllBeverages(BeverageRepo bevRepo, string lineFormatting)
+        public void PrintBeverage(Beverage entry, string lineFormatting)
+        {
+            Console.WriteLine(String.Format(lineFormatting, entry.Name,
+                                                            entry.Price,
+                                                            entry.SKU.ToString("D6"),
+                                                            entry.WeightGrams,
+                                                            entry.Container));
+        }
+        public void PrintAllBeverages()
         {
             Console.WriteLine("VEGETABLES\n");
-            Console.WriteLine(String.Format(lineFormatting, bevRepo.ProductKeys)+"\n");
-            foreach (Beverage entry in bevRepo.BeverageList)
+            Console.WriteLine(String.Format(LineFormatting, BeverageRepo.ProductKeys)+"\n");
+            foreach (Beverage entry in BeverageRepo.BeverageList)
             {
-                Console.WriteLine(String.Format(lineFormatting, entry.Name,
-                                                                    entry.Price,
-                                                                    entry.SKU.ToString("D6"),
-                                                                    entry.WeightGrams,
-                                                                    entry.Container));
+                PrintBeverage(entry, LineFormatting);
+            } 
+        }
+        public void PrintMeat(Meat entry, string lineFormatting)
+        {
+            Console.WriteLine(String.Format(lineFormatting, entry.Name,
+                                                            entry.Price,
+                                                            entry.SKU.ToString("D6"),
+                                                            entry.WeightGrams,
+                                                            entry.ProteinPer100G));
+        }
+        public void PrintAllMeats()
+        {
+            Console.WriteLine("VEGETABLES\n");
+            Console.WriteLine(String.Format(LineFormatting, BeverageRepo.ProductKeys)+"\n");
+            foreach (Meat entry in MeatRepo.MeatList)
+            {
+                PrintMeat(entry, LineFormatting);
+            } 
+        }
+        public void PrintCandy(Candy entry, string lineFormatting)
+        {
+            Console.WriteLine(String.Format(lineFormatting, entry.Name,
+                                                            entry.Price,
+                                                            entry.SKU.ToString("D6"),
+                                                            entry.WeightGrams,
+                                                            entry.SugarPer100G));
+        }
+        public void PrintAllCandy()
+        {
+            Console.WriteLine("VEGETABLES\n");
+            Console.WriteLine(String.Format(LineFormatting, BeverageRepo.ProductKeys)+"\n");
+            foreach (Candy entry in CandyRepo.CandyList)
+            {
+                PrintCandy(entry, LineFormatting);
             } 
         }
 

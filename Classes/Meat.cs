@@ -10,5 +10,19 @@ namespace StoreModel
         {
             ProteinPer100G = proteinPer100G;
         }
+
+        public override string ToString()
+        {
+            return $"{this.Name},{this.Price},{this.SKU},{this.WeightGrams},{this.ProteinPer100G}";
+        }
+
+        public string ToString(string lineFormatting)
+        {
+            return String.Format(lineFormatting, this.Name,
+                                                 this.Price,
+                                                 this.SKU,
+                                                 this.WeightGrams,
+                                                 this.ProteinPer100G);
+        }
     }
 }
