@@ -6,7 +6,7 @@ namespace StoreModel
     public class BeverageRepo
     {
         private readonly string _BeverageDBLocation = "/Users/crisc/csharp/StoreModel/ProductDatabases/beverages.csv";
-         private readonly Tuple<string[], string[]> BeverageCSVData;
+        private readonly Tuple<string[], string[]> BeverageCSVData;
         public string[] ProductKeys;
         public List<Beverage> BeverageList;
 
@@ -28,7 +28,7 @@ namespace StoreModel
                                      Convert.ToDecimal(splitItem[1]),
                                      Convert.ToInt32(splitItem[2]),
                                      Convert.ToInt32(splitItem[3]),
-                                     Convert.ToInt32(splitItem[4]));
+                                     splitItem[4]);
                 resultList.Add(BeverageEntry);
             }
             return resultList;
@@ -37,7 +37,7 @@ namespace StoreModel
         public void PrintAllProducts()
         {
             string stringAligment = "{0,-20}|  {1,-10}|  {2,-10}|  {3,-15}|  {4,-15}";
-            Console.WriteLine("BeverageS\n");
+            Console.WriteLine("BEVERAGES\n");
             Console.WriteLine(String.Format(stringAligment, ProductKeys)+"\n");
             foreach (Beverage entry in BeverageList)
             {
@@ -45,7 +45,7 @@ namespace StoreModel
                                                                 entry.Price,
                                                                 entry.SKU,
                                                                 entry.WeightGrams,
-                                                                entry.Mililitres));
+                                                                entry.Container));
             }
         }
     }

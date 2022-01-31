@@ -6,10 +6,8 @@ namespace StoreModel
     {
         static void Main(string[] args)
         {
-           var vegrepo = new VegetableRepo();
-           vegrepo.PrintAllProducts();
-
-            
+            var testInterface = new StoreInterface();
+            testInterface.PrintAllVegetables();
         }
-    }
+    }  
 }

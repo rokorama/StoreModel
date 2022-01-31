@@ -1,36 +1,35 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace StoreModel
 {
-    public class VegetableRepo
+    public class CandyRepo
     {
-        private readonly string _VegetableDBLocation = "/Users/crisc/csharp/StoreModel/ProductDatabases/vegetables.csv";
-        private readonly Tuple<string[], string[]> VegetableCSVData;
+        private readonly string _CandyDBLocation = "/Users/crisc/csharp/StoreModel/ProductDatabases/candy.csv";
+         private readonly Tuple<string[], string[]> CandyCSVData;
         public string[] ProductKeys;
-        public List<Vegetable> VegetableList;
+        public List<Candy> CandyList;
 
-        public VegetableRepo()
+        public CandyRepo()
         {
             var fileService = new FileReaderService();
-            VegetableCSVData = fileService.ReadDatabase(_VegetableDBLocation);
-            ProductKeys = VegetableCSVData.Item1;
-            VegetableList = BuildVegetableList(VegetableCSVData.Item2);
+            CandyCSVData = fileService.ReadDatabase(_CandyDBLocation);
+            ProductKeys = CandyCSVData.Item1;
+            CandyList = BuildCandyList(CandyCSVData.Item2);
         }
 
-        public List<Vegetable> BuildVegetableList(string[] inputList)
+        public List<Candy> BuildCandyList(string[] inputList)
         {
-            var resultList = new List<Vegetable>();
+            var resultList = new List<Candy>();
             foreach (string item in inputList)
             {
                 var splitItem = item.Split(",");
-                var vegetableEntry = new Vegetable(splitItem[0],
+                var CandyEntry = new Candy(splitItem[0],
                                      Convert.ToDecimal(splitItem[1]),
                                      Convert.ToInt32(splitItem[2]),
                                      Convert.ToInt32(splitItem[3]),
                                      Convert.ToInt32(splitItem[4]));
-                resultList.Add(vegetableEntry);
+                resultList.Add(CandyEntry);
             }
             return resultList;
         }
@@ -38,17 +37,16 @@ namespace StoreModel
         public void PrintAllProducts()
         {
             string stringAligment = "{0,-20}|  {1,-10}|  {2,-10}|  {3,-15}|  {4,-15}";
-            Console.WriteLine("VEGETABLES\n");
+            Console.WriteLine("CANDY\n");
             Console.WriteLine(String.Format(stringAligment, ProductKeys)+"\n");
-            foreach (Vegetable entry in VegetableList)
+            foreach (Candy entry in CandyList)
             {
                 Console.WriteLine(String.Format(stringAligment, entry.Name,
                                                                 entry.Price,
-                                                                entry.SKU.ToString("D6"),
+                                                                entry.SKU,
                                                                 entry.WeightGrams,
-                                                                entry.FibrePer100G));
+                                                                entry.SugarPer100G));
             }
         }
-
     }
 }
