@@ -16,6 +16,7 @@ namespace StoreModel
             var fileService = new FileReaderService();
             VegetableCSVData = fileService.ReadDatabase(_VegetableDBLocation);
             ProductKeys = VegetableCSVData.Item1;
+            VegetableList = BuildVegetableList(VegetableCSVData.Item2);
         }
 
 

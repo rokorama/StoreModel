@@ -33,20 +33,5 @@ namespace StoreModel
             }
             return resultList;
         }
-
-        public void PrintAllProducts()
-        {
-            string stringAligment = "{0,-20}|  {1,-10}|  {2,-10}|  {3,-15}|  {4,-15}";
-            Console.WriteLine("BEVERAGES\n");
-            Console.WriteLine(String.Format(stringAligment, ProductKeys)+"\n");
-            foreach (Beverage entry in BeverageList)
-            {
-                Console.WriteLine(String.Format(stringAligment, entry.Name,
-                                                                entry.Price,
-                                                                entry.SKU,
-                                                                entry.WeightGrams,
-                                                                entry.Container));
-            }
-        }
     }
 }
