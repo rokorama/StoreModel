@@ -2,14 +2,14 @@ using System;
 
 namespace StoreModel
 {
-    public class DataTransferObject
+    public class BasketItem
     {
         public string Name { get; set; }
         public decimal Price { get; set; }
-        public DataTransferObject()
+        public BasketItem(string name, decimal price)
         {
-            this.Name = Name;
-            this.Price = Price;
+            Name = name;
+            Price = price;
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace StoreModel
 {
@@ -7,11 +8,8 @@ namespace StoreModel
         static void Main(string[] args)
         {
             var testInterface = new StoreInterface();
-            testInterface.PrintAllBeverages();
-            testInterface.PrintAllCandy();
-            testInterface.PrintAllMeats();
-            testInterface.PrintAllVegetables();
-
+            testInterface.HomeMenu();
+            
         }
     }  
 }
