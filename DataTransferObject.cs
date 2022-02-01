@@ -4,13 +4,13 @@ namespace StoreModel
 {
     public class DataTransferObject
     {
-        private string Name;
-        private decimal Price;
-
+        public string Name { get; set; }
+        public decimal Price { get; set; }
         public DataTransferObject()
         {
-            
+            this.Name = Name;
+            this.Price = Price;
         }
-        
     }
+
 }

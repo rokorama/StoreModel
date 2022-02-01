@@ -19,10 +19,13 @@ namespace StoreModel
         private bool UserIsAbleToPurchase { get; set; }
         private readonly string LineFormatting = "{0,-20}|  {1,-10}|  {2,-10}|  {3,-15}|  {4,-15}";
 
+        //figure out if these need to be public
+
         public VegetableRepo VegetableRepo { get ; private set ; }
         public BeverageRepo BeverageRepo { get ; private set ; }
         public CandyRepo CandyRepo { get ; private set ; }
         public MeatRepo MeatRepo { get ; private set ; }
+        private List<DataTransferObject> TransferData { get; set; }
         
         public StoreInterface()
         {
@@ -33,54 +36,71 @@ namespace StoreModel
             BeverageRepo = new BeverageRepo();
             CandyRepo = new CandyRepo();
             MeatRepo = new MeatRepo();
+            TransferData = new List<DataTransferObject>();
         }
 
         public void ShowHomeMenu()
         {
             Console.Clear();
-            Console.WriteLine(String.Format("{0,5}{1,-30}",UserBudget,DateTime.Now));
         }
         
         public void ShowProductsInCategory()
         {
-            Console.WriteLine(UserBudget);
-            Console.WriteLine(UserIsAbleToPurchase);
+            
         }
 
         public void PrintAllVegetables()
         {
+            int entryCounter = 1;
             Console.WriteLine("VEGETABLES\n");
-            Console.WriteLine(String.Format(LineFormatting, VegetableRepo.ProductKeys)+"\n");
+            Console.WriteLine("##  | " + String.Format(LineFormatting, VegetableRepo.ProductKeys)+"\n");
             foreach (Vegetable entry in VegetableRepo.VegetableList)
             {
-                Console.WriteLine(entry.ToString(LineFormatting));
-            } 
+                Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
+                entryCounter++;
+            }
+            Console.WriteLine("\nEnter the number of a product to add to basket, or press B to go back");
+            Console.WriteLine(">>> ");
+            // var choice = Convert.ToInt32(Console.Read());
+            int choice = 2;
+            var selectionToBasket = new DataTransferObject();
+            selectionToBasket.Name = VegetableRepo.VegetableList[choice-1].Name;
+            selectionToBasket.Price = VegetableRepo.VegetableList[choice-1].Price;
+            TransferData.Add(selectionToBasket);
+
         }
         public void PrintAllBeverages()
         {
+            int entryCounter = 1;
             Console.WriteLine("BEVERAGES\n");
-            Console.WriteLine(String.Format(LineFormatting, BeverageRepo.ProductKeys)+"\n");
+            Console.WriteLine("##  | " + String.Format(LineFormatting, BeverageRepo.ProductKeys)+"\n");
             foreach (Beverage entry in BeverageRepo.BeverageList)
             {
-                Console.WriteLine(entry.ToString(LineFormatting));
+                Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
+                entryCounter++;
+
             } 
         }
         public void PrintAllMeats()
         {
+            int entryCounter = 1;
             Console.WriteLine("MEAT\n");
-            Console.WriteLine(String.Format(LineFormatting, BeverageRepo.ProductKeys)+"\n");
+            Console.WriteLine("##  | " + String.Format(LineFormatting, BeverageRepo.ProductKeys)+"\n");
             foreach (Meat entry in MeatRepo.MeatList)
             {
-                Console.WriteLine(entry.ToString(LineFormatting));
+                Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
+                entryCounter++;
             } 
         }
         public void PrintAllCandy()
         {
+            int entryCounter = 1;
             Console.WriteLine("CANDY\n");
-            Console.WriteLine(String.Format(LineFormatting, BeverageRepo.ProductKeys)+"\n");
+            Console.WriteLine("##  | " + String.Format(LineFormatting, BeverageRepo.ProductKeys)+"\n");
             foreach (Candy entry in CandyRepo.CandyList)
             {
-                Console.WriteLine(entry.ToString(LineFormatting));
+                Console.WriteLine(entryCounter.ToString("D2") + "  | " + entry.ToString(LineFormatting));
+                entryCounter++;
             } 
         }
 

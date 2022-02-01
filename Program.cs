@@ -6,7 +6,11 @@ namespace StoreModel
     {
         static void Main(string[] args)
         {
-            new StoreInterface();
+            var testInterface = new StoreInterface();
+            testInterface.PrintAllBeverages();
+            testInterface.PrintAllCandy();
+            testInterface.PrintAllMeats();
+            testInterface.PrintAllVegetables();
 
         }
     }  
