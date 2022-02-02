@@ -25,7 +25,7 @@ namespace StoreModel
         public BeverageRepo BeverageRepo { get ; private set ; }
         public CandyRepo CandyRepo { get ; private set ; }
         public MeatRepo MeatRepo { get ; private set ; }
-        private List<BasketItem> TransferData { get; set; }
+        private List<BasketItem> BasketItems { get; set; }
         
         public StoreInterface()
         {
@@ -33,7 +33,7 @@ namespace StoreModel
             BeverageRepo = new BeverageRepo();
             CandyRepo = new CandyRepo();
             MeatRepo = new MeatRepo();
-            TransferData = new List<BasketItem>();
+            BasketItems = new List<BasketItem>();
         }
 
         public char CheckForValidInputChar(List<char> acceptableValues)
@@ -56,7 +56,7 @@ namespace StoreModel
         public void HomeMenu()
         {
             //acceptable values go here
-            List<char> inputOptions = new List<char>() {'1','2','3','4','b','q'};
+            List<char> inputOptions = new List<char>() {'1','2','3','4','b','B','q','Q'};
             Console.Clear();
             Console.WriteLine(String.Format("\n\n\tSTORE INTERFACE THING\n\n\tcreated by @rokorama\n\n\n"));
             Console.WriteLine("Enter 1 to see the vegetable catalog");
@@ -81,19 +81,29 @@ namespace StoreModel
                     PrintAllCandy();
                     break;
                 case 'b':
+                case 'B':
                     ShowBasket();
                     break;
                 case 'q':
+                case 'Q':
+                    Console.Clear();
                     Environment.Exit(0);
                     break;
             }
                     
         }
+
+        public void InsertItemIntoBasket(string itemName, decimal itemPrice, string category)
+        {
+            
+        }
         
         public void PrintAllVegetables()
         {
             //implement 'n' and 'p' for next and previous entries
-            var inputOptions = new List<char>() {'1','2','3','4','5','6','7','8','9','b'};
+            var inputOptions = new List<char>() {'b', 'B'};
+            for (int indexCounter = 0; indexCounter < VegetableRepo.VegetableList.Count-1; indexCounter++)
+                inputOptions.Add(Char.Parse(indexCounter.ToString()));
             Console.Clear();
             int entryCounter = 1;
             Console.WriteLine("VEGETABLES\n");
@@ -107,18 +117,23 @@ namespace StoreModel
             char selection = CheckForValidInputChar(inputOptions);
             if (selection == 'b')
                 HomeMenu();
-            else {
+            // else {
                 int index = Convert.ToInt32(Char.GetNumericValue(selection)) - 1;
-                try {
+                // try {
                     var basketItem = new BasketItem(VegetableRepo.VegetableList[index].Name,
                                                     VegetableRepo.VegetableList[index].Price);
-                    TransferData.Add(basketItem);
+                    BasketItems.Add(basketItem);
+                    Console.WriteLine($"\n{basketItem.Name} has been added to your basket! Press any key to continue");
+                    Console.ReadKey();
                     HomeMenu();
-                    }
-                catch {
-                    Console.WriteLine("Invalid input - index out of reach - please try again.");
-                }
-            }
+                //     }
+                // catch {
+                //     Console.WriteLine("\n\nInvalid input - index out of reach!");
+                //     Console.WriteLine("Press any key to retry.");
+                //     Console.ReadKey();
+                //     PrintAllCandy();
+                // }
+            // }
         }
         public void PrintAllBeverages()
         {
@@ -141,11 +156,16 @@ namespace StoreModel
                 try {
                     var basketItem = new BasketItem(BeverageRepo.BeverageList[index].Name,
                                                     BeverageRepo.BeverageList[index].Price);
-                    TransferData.Add(basketItem);
+                    BasketItems.Add(basketItem);
+                    Console.WriteLine($"\n{basketItem.Name} has been added to your basket! Press any key to continue");
+                    Console.ReadKey();
                     HomeMenu();
                     }
                 catch {
-                    Console.WriteLine("Invalid input - index out of reach - please try again.");
+                    Console.WriteLine("\n\nInvalid input - index out of reach!");
+                    Console.WriteLine("Press any key to retry.");
+                    Console.ReadKey();
+                    PrintAllCandy();
                 }
             }
         }
@@ -170,11 +190,16 @@ namespace StoreModel
                 try {
                     var basketItem = new BasketItem(MeatRepo.MeatList[index].Name,
                                                     MeatRepo.MeatList[index].Price);
-                    TransferData.Add(basketItem);
+                    BasketItems.Add(basketItem);
+                    Console.WriteLine($"\n{basketItem.Name} has been added to your basket! Press any key to continue");
+                    Console.ReadKey();
                     HomeMenu();
                     }
                 catch {
-                    Console.WriteLine("Invalid input - index out of reach - please try again.");
+                    Console.WriteLine("\n\nInvalid input - index out of reach!");
+                    Console.WriteLine("Press any key to retry.");
+                    Console.ReadKey();
+                    PrintAllCandy();
                 }
             }
         }
@@ -199,7 +224,9 @@ namespace StoreModel
                 try {
                     var basketItem = new BasketItem(CandyRepo.CandyList[index].Name,
                                                     CandyRepo.CandyList[index].Price);
-                    TransferData.Add(basketItem);
+                    BasketItems.Add(basketItem);
+                    Console.WriteLine($"\n{basketItem.Name} has been added to your basket! Press any key to continue");
+                    Console.ReadKey();
                     HomeMenu();
                     }
                 catch {
@@ -214,11 +241,11 @@ namespace StoreModel
         
         public void ShowBasket()
         {
-            var inputOptions = new List<char>() {'c', 'b'};
+            var inputOptions = new List<char>() {'b'};
             Console.Clear();
             decimal amountPayable = 0;
             Console.WriteLine("YOUR SHOPPING BASKET:\n");
-            foreach (BasketItem item in TransferData)
+            foreach (BasketItem item in BasketItems)
             {
                 Console.WriteLine($"  {item.Name}\t\t|{item.Price}");
                 amountPayable += item.Price;
@@ -228,8 +255,6 @@ namespace StoreModel
             char selection = CheckForValidInputChar(inputOptions);
             if (selection == 'b')
                 HomeMenu();
-            if (selection == 'c')
-                Console.WriteLine("placeholder");
         }
 
         public void CompleteTransaction()
