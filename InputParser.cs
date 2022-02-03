@@ -60,5 +60,13 @@ namespace StoreModel
             }
             return result;
         }
+
+        public List<char> AddRangeOfAcceptableValues(int list)
+        {
+            var result = new List<char>();
+            for (int indexCounter = 1; indexCounter <= list; indexCounter++)
+            result.Add(Char.Parse(indexCounter.ToString()));
+            return result;
+        }
     }
 }

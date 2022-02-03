@@ -9,6 +9,7 @@
 // Kvitas išsiunčiamas nurodytu el. paštu (Labiau advanced dalis, palieku ją patiems išsaiškinti kaip tai padaryti P.S. tai nėra taip baisu kaip gali pasirodyt)
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace StoreModel
@@ -103,8 +104,8 @@ namespace StoreModel
             var inputOptions = new List<char>() {'b', 'B'};
             if (UserIsAbleToPurchase)
             {
-                for (int indexCounter = 1; indexCounter <= VegetableRepo.VegetableList.Count; indexCounter++)
-                inputOptions.Add(Char.Parse(indexCounter.ToString()));
+                ICollection collection = VegetableRepo.VegetableList as ICollection;
+                inputOptions.AddRange(InputParser.AddRangeOfAcceptableValues(collection.Count));
             }
             Console.Clear();
             int entryCounter = 1;
@@ -138,8 +139,8 @@ namespace StoreModel
             var inputOptions = new List<char>() {'b', 'B'};
             if (UserIsAbleToPurchase)
             {
-                for (int indexCounter = 1; indexCounter <= BeverageRepo.BeverageList.Count; indexCounter++)
-                inputOptions.Add(Char.Parse(indexCounter.ToString()));
+                ICollection collection = BeverageRepo.BeverageList as ICollection;
+                inputOptions.AddRange(InputParser.AddRangeOfAcceptableValues(collection.Count));
             }
             Console.Clear();
             int entryCounter = 1;
@@ -172,8 +173,8 @@ namespace StoreModel
             var inputOptions = new List<char>() {'b', 'B'};
             if (UserIsAbleToPurchase)
             {
-            for (int indexCounter = 1; indexCounter <= MeatRepo.MeatList.Count; indexCounter++)
-            inputOptions.Add(Char.Parse(indexCounter.ToString()));
+                ICollection collection = MeatRepo.MeatList as ICollection;
+                inputOptions.AddRange(InputParser.AddRangeOfAcceptableValues(collection.Count));
             }
             Console.Clear();
             int entryCounter = 1;
@@ -206,8 +207,8 @@ namespace StoreModel
             var inputOptions = new List<char>() {'b', 'B'};
             if (UserIsAbleToPurchase)
             {
-            for (int indexCounter = 1; indexCounter <= CandyRepo.CandyList.Count; indexCounter++)
-                inputOptions.Add(Char.Parse(indexCounter.ToString()));
+                ICollection collection = CandyRepo.CandyList as ICollection;
+                inputOptions.AddRange(InputParser.AddRangeOfAcceptableValues(collection.Count));
             }
             Console.Clear();
             int entryCounter = 1;
@@ -237,15 +238,26 @@ namespace StoreModel
 
         public void ShowBasket()
         {
-            var inputOptions = new List<char>() {'b','c'};
+            var inputOptions = new List<char>() {'b','B','c','C','r','R'};
             Basket.PrintItemsInBasket();
             Console.WriteLine($"Your allocated budget: {UserBudget}");
             Console.WriteLine("\nPress C to proceed to checkout, or B to go back to the menu");
             char selection = InputParser.PromptCharFromUser(inputOptions);
-            if (selection == 'b')
-                HomeMenu();
-            else
-                Checkout(UserBudget);
+            switch (selection)
+            {
+                case 'b':
+                case 'B':
+                    HomeMenu();
+                    break;
+                case 'c':
+                case 'C':
+                    Checkout(UserBudget);
+                    break;
+                case 'r':
+                case 'R':
+                    Console.WriteLine("Please enter number of the item you wish to remove:");
+                    break;
+            }
         }
                
         public void Checkout(decimal userBudget)
