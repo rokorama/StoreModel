@@ -34,6 +34,27 @@ namespace StoreModel
             CandyRepo = new CandyRepo();
             MeatRepo = new MeatRepo();
             Basket = new Basket();
+            UserBudget = PromptUserForBudget();
+            UserIsAbleToPurchase = (UserBudget > 0);
+            HomeMenu();
+        }
+
+        private decimal PromptUserForBudget()
+        {
+            decimal budget = 0;
+            bool valueIsValid = false;
+            while (!valueIsValid)
+            {
+            Console.Clear();
+            Console.WriteLine(String.Format("\n\n\tSTORE INTERFACE THING\n\n\tcreated by @rokorama\n\n\n"));
+            Console.WriteLine("To begin, please enter your budget below.");
+            Console.Write(">>> ");
+            if (Decimal.TryParse(Console.ReadLine(), out budget))
+                break;    
+            Console.Write("\nInvalid input, please try again! Hit any key to retry.");
+            Console.ReadKey();
+            }
+            return budget;
         }
 
         public char CheckForValidInputChar(List<char> acceptableValues)
@@ -58,13 +79,13 @@ namespace StoreModel
             //acceptable values go here
             List<char> inputOptions = new List<char>() {'1','2','3','4','b','B','q','Q'};
             Console.Clear();
-            Console.WriteLine(String.Format("\n\n\tSTORE INTERFACE THING\n\n\tcreated by @rokorama\n\n\n"));
-            Console.WriteLine("Enter 1 to see the vegetable catalog");
+            if (!UserIsAbleToPurchase)
+                Console.WriteLine("\n\nPLEASE NOTE - you may only view and not add items due to insufficient funds.");
+            Console.WriteLine("\n\nEnter 1 to see the vegetable catalog");
             Console.WriteLine("      2 to see the meat catalog");
             Console.WriteLine("      3 to see the beverage catalog");
             Console.WriteLine("      4 to see the candy catalog");
-            Console.Write(new string('-', Console.WindowWidth)); 
-            Console.WriteLine("\nEnter B to see your shopping basket, or Q to quit");
+            Console.WriteLine("\n\n Enter B to see your shopping basket, or Q to quit");
             char selection = CheckForValidInputChar(inputOptions);
             switch (selection)
             {
@@ -96,9 +117,11 @@ namespace StoreModel
         {
             //implement 'n' and 'p' for next and previous entries
             var inputOptions = new List<char>() {'b', 'B'};
-            for (int indexCounter = 1; indexCounter <= VegetableRepo.VegetableList.Count; indexCounter++)
+            if (UserIsAbleToPurchase)
+            {
+                for (int indexCounter = 1; indexCounter <= VegetableRepo.VegetableList.Count; indexCounter++)
                 inputOptions.Add(Char.Parse(indexCounter.ToString()));
-
+            }
             Console.Clear();
             int entryCounter = 1;
             Console.WriteLine("VEGETABLES\n");
@@ -108,8 +131,10 @@ namespace StoreModel
                 Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
                 entryCounter++;
             }
-            Console.WriteLine("\nEnter the number of a product to add to basket, or press B to go back");
-            char selection = CheckForValidInputChar(inputOptions);
+            if (!UserIsAbleToPurchase) 
+                Console.WriteLine("Adding items to basket disabled due to insufficient funds. Sorry!");
+            else
+                Console.WriteLine("\nEnter the number of a product to add to basket, or press B to go back");            char selection = CheckForValidInputChar(inputOptions);
 
             if (selection == 'b')
                 HomeMenu();
@@ -122,13 +147,16 @@ namespace StoreModel
                 HomeMenu();
             }
         }
+    
 
         public void PrintAllBeverages()
         {
             var inputOptions = new List<char>() {'b', 'B'};
-            for (int indexCounter = 1; indexCounter <= BeverageRepo.BeverageList.Count; indexCounter++)
+            if (UserIsAbleToPurchase)
+            {
+                for (int indexCounter = 1; indexCounter <= BeverageRepo.BeverageList.Count; indexCounter++)
                 inputOptions.Add(Char.Parse(indexCounter.ToString()));
-
+            }
             Console.Clear();
             int entryCounter = 1;
             Console.WriteLine("BEVERAGES\n");
@@ -138,7 +166,11 @@ namespace StoreModel
                 Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
                 entryCounter++;
             } 
-            Console.WriteLine("\nEnter the number of a product to add to basket, or press B to go back");
+            if (!UserIsAbleToPurchase) 
+                Console.WriteLine("Adding items to basket disabled due to insufficient funds. Sorry!");
+            else
+                Console.WriteLine("\nEnter the number of a product to add to basket, or press B to go back");
+                
             char selection = CheckForValidInputChar(inputOptions);
 
             if (selection == 'b')
@@ -156,19 +188,25 @@ namespace StoreModel
         public void PrintAllMeats()
         {
             var inputOptions = new List<char>() {'b', 'B'};
+            if (UserIsAbleToPurchase)
+            {
             for (int indexCounter = 1; indexCounter <= MeatRepo.MeatList.Count; indexCounter++)
-                inputOptions.Add(Char.Parse(indexCounter.ToString()));
-
+            inputOptions.Add(Char.Parse(indexCounter.ToString()));
+            }
             Console.Clear();
             int entryCounter = 1;
             Console.WriteLine("MEAT\n");
-            Console.WriteLine("##  | " + String.Format(LineFormatting, BeverageRepo.ProductKeys)+"\n");
+            Console.WriteLine("##  | " + String.Format(LineFormatting, MeatRepo.ProductKeys)+"\n");
             foreach (Meat entry in MeatRepo.MeatList)
             {
                 Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
                 entryCounter++;
-            } 
-            Console.WriteLine("\nEnter the number of a product to add to basket, or press B to go back");
+            }
+            if (!UserIsAbleToPurchase) 
+                Console.WriteLine("Adding items to basket disabled due to insufficient funds. Sorry!");
+            else
+                Console.WriteLine("\nEnter the number of a product to add to basket, or press B to go back");
+
             char selection = CheckForValidInputChar(inputOptions);
             
             if (selection == 'b')
@@ -186,9 +224,11 @@ namespace StoreModel
         public void PrintAllCandy()
         {
             var inputOptions = new List<char>() {'b', 'B'};
+            if (UserIsAbleToPurchase)
+            {
             for (int indexCounter = 1; indexCounter <= CandyRepo.CandyList.Count; indexCounter++)
                 inputOptions.Add(Char.Parse(indexCounter.ToString()));
-
+            }
             Console.Clear();
             int entryCounter = 1;
             Console.WriteLine("CANDY\n");
@@ -198,9 +238,11 @@ namespace StoreModel
                 Console.WriteLine(entryCounter.ToString("D2") + "  | " + entry.ToString(LineFormatting));
                 entryCounter++;
             }
-            Console.WriteLine("\nEnter the number of a product to add to basket, or press B to go back");
-            char selection = CheckForValidInputChar(inputOptions);
-
+            if (!UserIsAbleToPurchase) 
+                Console.WriteLine("Adding items to basket disabled due to insufficient funds. Sorry!");
+            else
+                Console.WriteLine("\nEnter the number of a product to add to basket, or press B to go back");            char selection = CheckForValidInputChar(inputOptions);
+       
             if (selection == 'b')
                 HomeMenu();
             else
