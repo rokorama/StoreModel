@@ -9,7 +9,7 @@ namespace StoreModel
         private readonly string _VegetableDBLocation = "/Users/crisc/csharp/StoreModel/ProductDatabases/vegetables.csv";
         private readonly Tuple<string[], List<string[]>> VegetableCSVData;
         public string[] ProductKeys;
-        public IList<Vegetable> VegetableList;
+        public List<Vegetable> VegetableList;
 
         public VegetableRepo()
         {
@@ -19,7 +19,7 @@ namespace StoreModel
             VegetableList = BuildVegetableList(VegetableCSVData.Item2);
         }
 
-        public IList<Vegetable> BuildVegetableList(List<string[]> inputList)
+        public List<Vegetable> BuildVegetableList(List<string[]> inputList)
         {
             var resultList = new List<Vegetable>();
             foreach (string[] item in inputList)

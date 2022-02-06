@@ -27,13 +27,13 @@ namespace StoreModel
         public void PrintItemsInBasket()
         {
             Console.Clear();
-            Console.WriteLine("\n\nYOUR SHOPPING BASKET\n\n");
+            Console.WriteLine("\n\nYOUR SHOPPING BASKET\n");
             Console.WriteLine(String.Format("{0,-25}|{1,10}","Item","Price") + "\n");
             foreach (BasketItem item in Items)
             {
                 Console.WriteLine(String.Format("{0,-25}|{1,10}", item.Name, item.Price));
             } 
-            Console.WriteLine(String.Format("{0,25}|",SumOfAllItems));
+            Console.WriteLine(String.Format("{0,25}|"," ",SumOfAllItems));
         }
 
 

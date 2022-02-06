@@ -20,7 +20,7 @@ namespace StoreModel
         {
             return String.Format(lineFormatting, this.Name,
                                                  this.Price,
-                                                 this.SKU,
+                                                 this.SKU.ToString("D6"),
                                                  this.WeightGrams,
                                                  this.ProteinPer100G);
         }

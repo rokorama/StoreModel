@@ -8,7 +8,7 @@ namespace StoreModel
         private readonly string _BeverageDBLocation = "/Users/crisc/csharp/StoreModel/ProductDatabases/beverages.csv";
         private readonly Tuple<string[], List<string[]>> BeverageCSVData;
         public string[] ProductKeys;
-        public IList<Beverage> BeverageList;
+        public List<Beverage> BeverageList;
 
         public BeverageRepo()
         {
@@ -18,7 +18,7 @@ namespace StoreModel
             BeverageList = BuildBeverageList(BeverageCSVData.Item2);
         }
 
-        public IList<Beverage> BuildBeverageList(List<string[]> inputList)
+        public List<Beverage> BuildBeverageList(List<string[]> inputList)
         {
             var resultList = new List<Beverage>();
             foreach (string[] item in inputList)

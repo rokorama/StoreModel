@@ -11,6 +11,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StoreModel
 {
@@ -18,7 +19,7 @@ namespace StoreModel
     {
         private decimal UserBudget { get; set; }
         private bool UserIsAbleToPurchase { get; set; }
-        private readonly string LineFormatting = "{0,-20}|  {1,-10}|  {2,-10}|  {3,-15}|  {4,-15}";
+        private readonly string LineFormatting = "{0,-30}|  {1,-12}|  {2,-12}|  {3,-12}|  {4,-12}";
 
         //figure out if these need to be public
 
@@ -71,16 +72,16 @@ namespace StoreModel
             switch (selection)
             {
                 case '1': 
-                    PrintAllVegetables();
+                    PrintAllVegetables(new PageDisplay(VegetableRepo.VegetableList, 1, 9));
                     break;
                 case '2':
-                    PrintAllMeats();
+                    PrintAllMeats(new PageDisplay(MeatRepo.MeatList, 1, 9));
                     break;
                 case '3':
-                    PrintAllBeverages();
+                    PrintAllBeverages(new PageDisplay(BeverageRepo.BeverageList, 1, 9));
                     break;
                 case '4':
-                    PrintAllCandy();
+                    PrintAllCandy(new PageDisplay(CandyRepo.CandyList, 1, 9));
                     break;
                 case 'b':
                 case 'B':
@@ -98,143 +99,173 @@ namespace StoreModel
             }
         }
 
-        public void PrintAllVegetables()
+        public void PrintAllVegetables(PageDisplay currentPage)
         {
-            //implement 'n' and 'p' for next and previous entries
-            var inputOptions = new List<char>() {'b', 'B'};
-            if (UserIsAbleToPurchase)
-            {
-                ICollection collection = VegetableRepo.VegetableList as ICollection;
-                inputOptions.AddRange(InputParser.AddRangeOfAcceptableValues(collection.Count));
-            }
-            Console.Clear();
+            var inputOptions = new List<char>() {'b', 'B', ',', '.'};
             int entryCounter = 1;
-            Console.WriteLine("VEGETABLES\n");
+            int totalPages = currentPage.CalculateTotalPages(VegetableRepo.VegetableList.Count);
+            Console.Clear();
+            Console.WriteLine($"VEGETABLES\tPage {currentPage.PageNumber} of {totalPages}\n");
             Console.WriteLine("##  | " + String.Format(LineFormatting, VegetableRepo.ProductKeys)+"\n");
-            foreach (Vegetable entry in VegetableRepo.VegetableList)
+            foreach (Vegetable entry in currentPage.VegetableItems)
             {
                 Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
+                if (UserIsAbleToPurchase)
+                    inputOptions.Add(Char.Parse(entryCounter.ToString()));
                 entryCounter++;
             }
             if (!UserIsAbleToPurchase) 
                 Console.WriteLine("Adding items to basket disabled due to insufficient funds. Sorry!");
             else
-                Console.WriteLine("\nEnter the number of a product to add to basket, or press B to go back");
+                Console.WriteLine("\nEnter the number of a product to add to basket, press , and . to navigate between pages or B to go back");
             char selection = InputParser.PromptCharFromUser(inputOptions);
             if (selection == 'b')
                 HomeMenu();
+            if (selection == ',')
+                {
+                var previousPage = new PageDisplay(VegetableRepo.VegetableList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9);
+                PrintAllVegetables(previousPage);
+                }
+            if (selection == '.')
+                {
+                var nextPage = new PageDisplay(VegetableRepo.VegetableList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages));
+                PrintAllVegetables(nextPage);
+                } 
             else
-            {
+                {
                 int index = InputParser.GetIntFromChar(selection) - 1;
-                var basketItem = new BasketItem(VegetableRepo.VegetableList[index].Name,
-                                                VegetableRepo.VegetableList[index].Price);
+                var basketItem = new BasketItem(currentPage.VegetableItems[index].Name,
+                                                currentPage.VegetableItems[index].Price);
                 Basket.AddItemToBasket(basketItem);
                 HomeMenu();
-            }
-        }
-    
-
-        public void PrintAllBeverages()
-        {
-            var inputOptions = new List<char>() {'b', 'B'};
-            if (UserIsAbleToPurchase)
-            {
-                ICollection collection = BeverageRepo.BeverageList as ICollection;
-                inputOptions.AddRange(InputParser.AddRangeOfAcceptableValues(collection.Count));
-            }
-            Console.Clear();
-            int entryCounter = 1;
-            Console.WriteLine("BEVERAGES\n");
-            Console.WriteLine("##  | " + String.Format(LineFormatting, BeverageRepo.ProductKeys)+"\n");
-            foreach (Beverage entry in BeverageRepo.BeverageList)
-            {
-                Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
-                entryCounter++;
-            } 
-            if (!UserIsAbleToPurchase) 
-                Console.WriteLine("Adding items to basket disabled due to insufficient funds. Sorry!");
-            else
-                Console.WriteLine("\nEnter the number of a product to add to basket, or press B to go back");
-            char selection = InputParser.PromptCharFromUser(inputOptions);
-            if (selection == 'b')
-                HomeMenu();
-            else
-            {
-                int index = InputParser.GetIntFromChar(selection) - 1;
-                var basketItem = new BasketItem(BeverageRepo.BeverageList[index].Name,
-                                                BeverageRepo.BeverageList[index].Price);
-                Basket.AddItemToBasket(basketItem);
-                HomeMenu();
-            }
-        }
-
-        public void PrintAllMeats()
-        {
-            var inputOptions = new List<char>() {'b', 'B'};
-            if (UserIsAbleToPurchase)
-            {
-                ICollection collection = MeatRepo.MeatList as ICollection;
-                inputOptions.AddRange(InputParser.AddRangeOfAcceptableValues(collection.Count));
-            }
-            Console.Clear();
-            int entryCounter = 1;
-            Console.WriteLine("MEAT\n");
-            Console.WriteLine("##  | " + String.Format(LineFormatting, MeatRepo.ProductKeys)+"\n");
-            foreach (Meat entry in MeatRepo.MeatList)
-            {
-                Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
-                entryCounter++;
-            }
-            if (!UserIsAbleToPurchase) 
-                Console.WriteLine("Adding items to basket disabled due to insufficient funds. Sorry!");
-            else
-                Console.WriteLine("\nEnter the number of a product to add to basket, or press B to go back");
-            char selection = InputParser.PromptCharFromUser(inputOptions);
-            if (selection == 'b')
-                HomeMenu();
-            else
-            {
-                int index = InputParser.GetIntFromChar(selection) - 1;
-                var basketItem = new BasketItem(MeatRepo.MeatList[index].Name,
-                                                MeatRepo.MeatList[index].Price);
-                Basket.AddItemToBasket(basketItem);
-                HomeMenu();
-            }
+                }
         }
         
-        public void PrintAllCandy()
+        public void PrintAllBeverages(PageDisplay currentPage)
         {
-            var inputOptions = new List<char>() {'b', 'B'};
-            if (UserIsAbleToPurchase)
-            {
-                ICollection collection = CandyRepo.CandyList as ICollection;
-                inputOptions.AddRange(InputParser.AddRangeOfAcceptableValues(collection.Count));
-            }
-            Console.Clear();
+            var inputOptions = new List<char>() {'b', 'B', ',', '.'};
             int entryCounter = 1;
-            Console.WriteLine("CANDY\n");
-            Console.WriteLine("##  | " + String.Format(LineFormatting, CandyRepo.ProductKeys)+"\n");
-            foreach (Candy entry in CandyRepo.CandyList)
+            int totalPages = currentPage.CalculateTotalPages(BeverageRepo.BeverageList.Count);
+            Console.Clear();
+            Console.WriteLine($"Beverages\tPage {currentPage.PageNumber} of {totalPages}\n");
+            Console.WriteLine("##  | " + String.Format(LineFormatting, BeverageRepo.ProductKeys)+"\n");
+            foreach (Beverage entry in currentPage.BeverageItems)
             {
-                Console.WriteLine(entryCounter.ToString("D2") + "  | " + entry.ToString(LineFormatting));
+                Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
+                if (UserIsAbleToPurchase)
+                    inputOptions.Add(Char.Parse(entryCounter.ToString()));
                 entryCounter++;
             }
             if (!UserIsAbleToPurchase) 
-                Console.WriteLine("Adding items to basket disabled due to insufficient funds. You can hit B to go back.");
+                Console.WriteLine("Adding items to basket disabled due to insufficient funds. Sorry!");
             else
-                Console.WriteLine("\nEnter the number of a product to add to basket, or press B to go back");
+                Console.WriteLine("\nEnter the number of a product to add to basket, press , and . to navigate between pages or B to go back");
             char selection = InputParser.PromptCharFromUser(inputOptions);
             if (selection == 'b')
                 HomeMenu();
+            if (selection == ',')
+                {
+                var previousPage = new PageDisplay(BeverageRepo.BeverageList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9);
+                PrintAllBeverages(previousPage);
+                }
+            if (selection == '.')
+                {
+                var nextPage = new PageDisplay(BeverageRepo.BeverageList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages));
+                PrintAllBeverages(nextPage);
+                } 
             else
-            {
+                {
                 int index = InputParser.GetIntFromChar(selection) - 1;
-                var basketItem = new BasketItem(CandyRepo.CandyList[index].Name,
-                                                CandyRepo.CandyList[index].Price);
+                var basketItem = new BasketItem(currentPage.BeverageItems[index].Name,
+                                                currentPage.BeverageItems[index].Price);
                 Basket.AddItemToBasket(basketItem);
                 HomeMenu();
+                }
             }
-        }
+
+         public void PrintAllMeats(PageDisplay currentPage)
+        {
+            var inputOptions = new List<char>() {'b', 'B', ',', '.'};
+            int entryCounter = 1;
+            int totalPages = currentPage.CalculateTotalPages(MeatRepo.MeatList.Count);
+            Console.Clear();
+            Console.WriteLine($"Meats\tPage {currentPage.PageNumber} of {totalPages}\n");
+            Console.WriteLine("##  | " + String.Format(LineFormatting, MeatRepo.ProductKeys)+"\n");
+            foreach (Meat entry in currentPage.MeatItems)
+            {
+                Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
+                if (UserIsAbleToPurchase)
+                    inputOptions.Add(Char.Parse(entryCounter.ToString()));
+                entryCounter++;
+            }
+            if (!UserIsAbleToPurchase) 
+                Console.WriteLine("Adding items to basket disabled due to insufficient funds. Sorry!");
+            else
+                Console.WriteLine("\nEnter the number of a product to add to basket, press , and . to navigate between pages or B to go back");
+            char selection = InputParser.PromptCharFromUser(inputOptions);
+            if (selection == 'b')
+                HomeMenu();
+            if (selection == ',')
+                {
+                var previousPage = new PageDisplay(MeatRepo.MeatList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9);
+                PrintAllMeats(previousPage);
+                }
+            if (selection == '.')
+                {
+                var nextPage = new PageDisplay(MeatRepo.MeatList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages));
+                PrintAllMeats(nextPage);
+                } 
+            else
+                {
+                int index = InputParser.GetIntFromChar(selection) - 1;
+                var basketItem = new BasketItem(currentPage.MeatItems[index].Name,
+                                                currentPage.MeatItems[index].Price);
+                Basket.AddItemToBasket(basketItem);
+                HomeMenu();
+                }
+            }
+        
+        public void PrintAllCandy(PageDisplay currentPage)
+        {
+            var inputOptions = new List<char>() {'b', 'B', ',', '.'};
+            int entryCounter = 1;
+            int totalPages = currentPage.CalculateTotalPages(CandyRepo.CandyList.Count);
+            Console.Clear();
+            Console.WriteLine($"Candy\tPage {currentPage.PageNumber} of {totalPages}\n");
+            Console.WriteLine("##  | " + String.Format(LineFormatting, CandyRepo.ProductKeys)+"\n");
+            foreach (Candy entry in currentPage.CandyItems)
+            {
+                Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
+                if (UserIsAbleToPurchase)
+                    inputOptions.Add(Char.Parse(entryCounter.ToString()));
+                entryCounter++;
+            }
+            if (!UserIsAbleToPurchase) 
+                Console.WriteLine("Adding items to basket disabled due to insufficient funds. Sorry!");
+            else
+                Console.WriteLine("\nEnter the number of a product to add to basket, press , and . to navigate between pages or B to go back");
+            char selection = InputParser.PromptCharFromUser(inputOptions);
+            if (selection == 'b')
+                HomeMenu();
+            if (selection == ',')
+                {
+                var previousPage = new PageDisplay(CandyRepo.CandyList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9);
+                PrintAllCandy(previousPage);
+                }
+            if (selection == '.')
+                {
+                var nextPage = new PageDisplay(CandyRepo.CandyList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages));
+                PrintAllCandy(nextPage);
+                } 
+            else
+                {
+                int index = InputParser.GetIntFromChar(selection) - 1;
+                var basketItem = new BasketItem(currentPage.CandyItems[index].Name,
+                                                currentPage.CandyItems[index].Price);
+                Basket.AddItemToBasket(basketItem);
+                HomeMenu();
+                }
+            }
 
         public void ShowBasket()
         {
@@ -285,7 +316,5 @@ namespace StoreModel
             // Console.WriteLine()
             // if (String.IsNullOrEmpty(emailInput))
         }
-
     }
-
 }

@@ -8,7 +8,7 @@ namespace StoreModel
         private readonly string _CandyDBLocation = "/Users/crisc/csharp/StoreModel/ProductDatabases/candy.csv";
         private readonly Tuple<string[], List<string[]>> CandyCSVData;
         public string[] ProductKeys;
-        public IList<Candy> CandyList;
+        public List<Candy> CandyList;
 
         public CandyRepo()
         {
@@ -18,7 +18,7 @@ namespace StoreModel
             CandyList = BuildCandyList(CandyCSVData.Item2);
         }
 
-        public IList<Candy> BuildCandyList(List<string[]> inputList)
+        public List<Candy> BuildCandyList(List<string[]> inputList)
         {
             var resultList = new List<Candy>();
             foreach (string[] item in inputList)
