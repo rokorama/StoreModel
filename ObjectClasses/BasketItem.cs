@@ -11,6 +11,11 @@ namespace StoreModel
             Name = name;
             Price = price;
         }
+
+        public override string  ToString()
+        {
+            return $"{this.Name},{this.Price}";
+        }
     }
 
 }

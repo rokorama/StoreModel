@@ -28,7 +28,7 @@ namespace StoreModel
         {
             Console.Clear();
             Console.WriteLine("\n\nYOUR SHOPPING BASKET\n");
-            Console.WriteLine(String.Format("{0,-25}|{1,10}","Item","Price") + "\n");
+            Console.WriteLine(String.Format("{0,-30}|{1,12}","Item","Price") + "\n");
             foreach (BasketItem item in Items)
             {
                 Console.WriteLine(String.Format("{0,-25}|{1,10}", item.Name, item.Price));

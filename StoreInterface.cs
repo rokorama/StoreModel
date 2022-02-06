@@ -85,7 +85,7 @@ namespace StoreModel
                     break;
                 case 'b':
                 case 'B':
-                    ShowBasket();
+                    ShowBasket(new PageDisplay(Basket.Items, 1, 9));
                     break;
                 case 'c':
                 case 'C':
@@ -115,21 +115,17 @@ namespace StoreModel
                 entryCounter++;
             }
             if (!UserIsAbleToPurchase) 
-                Console.WriteLine("Adding items to basket disabled due to insufficient funds. Sorry!");
+                Console.WriteLine("\nAdding items to basket disabled due to insufficient funds. Sorry!");
             else
                 Console.WriteLine("\nEnter the number of a product to add to basket, press , and . to navigate between pages or B to go back");
             char selection = InputParser.PromptCharFromUser(inputOptions);
             if (selection == 'b')
                 HomeMenu();
             if (selection == ',')
-                {
-                var previousPage = new PageDisplay(VegetableRepo.VegetableList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9);
-                PrintAllVegetables(previousPage);
-                }
+                PrintAllVegetables(new PageDisplay(VegetableRepo.VegetableList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
             if (selection == '.')
                 {
-                var nextPage = new PageDisplay(VegetableRepo.VegetableList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages));
-                PrintAllVegetables(nextPage);
+                PrintAllVegetables(new PageDisplay(VegetableRepo.VegetableList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
                 } 
             else
                 {
@@ -157,22 +153,16 @@ namespace StoreModel
                 entryCounter++;
             }
             if (!UserIsAbleToPurchase) 
-                Console.WriteLine("Adding items to basket disabled due to insufficient funds. Sorry!");
+                Console.WriteLine("\nAdding items to basket disabled due to insufficient funds. Sorry!");
             else
                 Console.WriteLine("\nEnter the number of a product to add to basket, press , and . to navigate between pages or B to go back");
             char selection = InputParser.PromptCharFromUser(inputOptions);
             if (selection == 'b')
                 HomeMenu();
             if (selection == ',')
-                {
-                var previousPage = new PageDisplay(BeverageRepo.BeverageList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9);
-                PrintAllBeverages(previousPage);
-                }
+                PrintAllBeverages(new PageDisplay(BeverageRepo.BeverageList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
             if (selection == '.')
-                {
-                var nextPage = new PageDisplay(BeverageRepo.BeverageList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages));
-                PrintAllBeverages(nextPage);
-                } 
+                PrintAllBeverages(new PageDisplay(BeverageRepo.BeverageList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
             else
                 {
                 int index = InputParser.GetIntFromChar(selection) - 1;
@@ -199,22 +189,16 @@ namespace StoreModel
                 entryCounter++;
             }
             if (!UserIsAbleToPurchase) 
-                Console.WriteLine("Adding items to basket disabled due to insufficient funds. Sorry!");
+                Console.WriteLine("\nAdding items to basket disabled due to insufficient funds. Sorry!");
             else
                 Console.WriteLine("\nEnter the number of a product to add to basket, press , and . to navigate between pages or B to go back");
             char selection = InputParser.PromptCharFromUser(inputOptions);
             if (selection == 'b')
                 HomeMenu();
             if (selection == ',')
-                {
-                var previousPage = new PageDisplay(MeatRepo.MeatList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9);
-                PrintAllMeats(previousPage);
-                }
+                PrintAllMeats(new PageDisplay(MeatRepo.MeatList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
             if (selection == '.')
-                {
-                var nextPage = new PageDisplay(MeatRepo.MeatList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages));
-                PrintAllMeats(nextPage);
-                } 
+                PrintAllMeats(new PageDisplay(MeatRepo.MeatList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
             else
                 {
                 int index = InputParser.GetIntFromChar(selection) - 1;
@@ -241,22 +225,16 @@ namespace StoreModel
                 entryCounter++;
             }
             if (!UserIsAbleToPurchase) 
-                Console.WriteLine("Adding items to basket disabled due to insufficient funds. Sorry!");
+                Console.WriteLine("\nAdding items to basket disabled due to insufficient funds. Sorry!");
             else
                 Console.WriteLine("\nEnter the number of a product to add to basket, press , and . to navigate between pages or B to go back");
             char selection = InputParser.PromptCharFromUser(inputOptions);
             if (selection == 'b')
                 HomeMenu();
             if (selection == ',')
-                {
-                var previousPage = new PageDisplay(CandyRepo.CandyList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9);
-                PrintAllCandy(previousPage);
-                }
+                PrintAllCandy(new PageDisplay(CandyRepo.CandyList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
             if (selection == '.')
-                {
-                var nextPage = new PageDisplay(CandyRepo.CandyList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages));
-                PrintAllCandy(nextPage);
-                } 
+                PrintAllCandy(new PageDisplay(CandyRepo.CandyList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
             else
                 {
                 int index = InputParser.GetIntFromChar(selection) - 1;
@@ -267,10 +245,19 @@ namespace StoreModel
                 }
             }
 
-        public void ShowBasket()
+        public void ShowBasket(PageDisplay currentPage)
         {
             var inputOptions = new List<char>() {'b','B','c','C','r','R'};
-            Basket.PrintItemsInBasket();
+            int entryCounter = 1;
+            int totalPages = currentPage.CalculateTotalPages(CandyRepo.CandyList.Count);
+            Console.Clear();
+            Console.WriteLine($"Candy\tPage {currentPage.PageNumber} of {totalPages}\n");
+            Console.WriteLine(String.Format("{0,-30}|{1,12}","Item","Price") + "\n");
+            foreach (BasketItem entry in currentPage.BasketItems)
+            {
+                Console.WriteLine(entryCounter.ToString("D2") + "  | " +  String.Format("{0,-30}|{1,12}",entry.ToString().Split(",")));
+                entryCounter++;
+            }
             Console.WriteLine($"Your allocated budget: {UserBudget}");
             Console.WriteLine("\nPress C to proceed to checkout, or B to go back to the menu");
             char selection = InputParser.PromptCharFromUser(inputOptions);
@@ -289,6 +276,8 @@ namespace StoreModel
                     Console.WriteLine("Please enter number of the item you wish to remove:");
                     break;
             }
+
+
         }
                
         public void Checkout(decimal userBudget)
@@ -306,9 +295,7 @@ namespace StoreModel
                 InputParser.PromptForAnyKey();
             }
             else
-            {
-                Console.WriteLine("Sorry, insufficient funds! Please check your basket and try again");
-            }
+                Console.WriteLine("\n\n\tSorry, insufficient funds! Please check your basket and try again");
 
             // Console.WriteLine("\n\nEnter your email address if you wish to receive an invoice, or hit Enter to skip:");
             // Console.Write(">>> ");
