@@ -1,7 +1,6 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Linq;
+using Microsoft.VisualBasic.FileIO;
 
 namespace StoreModel
 {
@@ -11,13 +10,21 @@ namespace StoreModel
         {
         }
 
-        public Tuple<string[], string[]> ReadDatabase(string fileLocation)
+        public Tuple<string[], List<string[]>> ReadDatabase(string fileLocation)
         {
-            var allLines = File.ReadAllLines(fileLocation);
-            //store CSV headers in a separate array
-            var headers = allLines[0].Split(",").ToArray();
-            var entry = allLines.Skip(1).ToArray();
-            var result = Tuple.Create(headers, entry);
+            TextFieldParser parser = new TextFieldParser(fileLocation);
+            parser.HasFieldsEnclosedInQuotes = true;
+            parser.SetDelimiters(",");
+
+            var headers = parser.ReadFields();
+            var entries = new List<string[]>();
+            while (!parser.EndOfData)
+            {
+                var entry = parser.ReadFields();
+                entries.Add(entry);
+            } 
+            parser.Close();
+            var result = Tuple.Create(headers, entries);
             return result;
         }
 
