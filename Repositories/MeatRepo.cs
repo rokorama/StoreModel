@@ -6,7 +6,7 @@ namespace StoreModel
     public class MeatRepo
     {
         private readonly string _MeatDBLocation = "/Users/crisc/csharp/StoreModel/ProductDatabases/meats.csv";
-         private readonly Tuple<string[], string[]> MeatCSVData;
+         private readonly Tuple<string[], List<string[]>> MeatCSVData;
         public string[] ProductKeys;
         public List<Meat> MeatList;
 
@@ -18,17 +18,16 @@ namespace StoreModel
             MeatList = BuildMeatList(MeatCSVData.Item2);
         }
 
-        public List<Meat> BuildMeatList(string[] inputList)
+        public List<Meat> BuildMeatList(List<string[]> inputList)
         {
             var resultList = new List<Meat>();
-            foreach (string item in inputList)
+            foreach (string[] item in inputList)
             {
-                var splitItem = item.Split(",");
-                var MeatEntry = new Meat(splitItem[0],
-                                     Convert.ToDecimal(splitItem[1]),
-                                     Convert.ToInt32(splitItem[2]),
-                                     Convert.ToInt32(splitItem[3]),
-                                     Convert.ToInt32(splitItem[4]));
+                var MeatEntry = new Meat(item[0],
+                                     Convert.ToDecimal(item[1]),
+                                     Convert.ToInt32(item[2]),
+                                     Convert.ToInt32(item[3]),
+                                     Convert.ToInt32(item[4]));
                 resultList.Add(MeatEntry);
             }
             return resultList;

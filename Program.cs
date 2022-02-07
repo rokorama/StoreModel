@@ -8,8 +8,7 @@ namespace StoreModel
         static void Main(string[] args)
         {
             var testInterface = new StoreInterface();
-            testInterface.HomeMenu();
-            
         }
-    }  
+    }
+
 }
