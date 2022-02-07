@@ -56,7 +56,7 @@ namespace StoreModel
         public void HomeMenu()
         {
             //acceptable values go here
-            List<char> inputOptions = new List<char>() {'1','2','3','4','b','B','c','C','q','Q'};
+            List<char> inputOptions = new List<char>() {'1','2','3','4','b','B','q','Q'};
             Console.Clear();
             if (!UserIsAbleToPurchase)
                 Console.WriteLine("\n\nPLEASE NOTE - you may only view and not add items due to insufficient funds.");
@@ -66,7 +66,6 @@ namespace StoreModel
             Console.WriteLine("      4 to see the candy catalog");
             Console.WriteLine("\n\n Other options:\n");
             Console.WriteLine("B - go to shopping basket");
-            Console.WriteLine("C - change budget");
             Console.WriteLine("Q - quit");
             char selection = InputParser.PromptCharFromUser(inputOptions);
             switch (selection)
@@ -86,10 +85,6 @@ namespace StoreModel
                 case 'b':
                 case 'B':
                     ShowBasket(new PageDisplay(Basket.BasketList, 1, 9));
-                    break;
-                case 'c':
-                case 'C':
-                    // ChangeBudget();
                     break;
                 case 'q':
                 case 'Q':
@@ -285,7 +280,7 @@ namespace StoreModel
             {
                 Console.Clear();
                 Console.WriteLine("\n\n\tThank you for your order!");
-                Console.WriteLine("\n\n\tPlease hit any key to continue");
+                Console.WriteLine("\n\n\tPlease hit any key to quit application.");
                 InputParser.PromptForAnyKey();
             }
             else
@@ -293,11 +288,11 @@ namespace StoreModel
                 Console.WriteLine("\n\n\tSorry, insufficient funds!");
                 Console.WriteLine("\n\n\tHit any key to go back");
                 InputParser.PromptForAnyKey();
+                ShowBasket(new PageDisplay(Basket.BasketList, 1, 9));
             }
 
             // Console.WriteLine("\n\nEnter your email address if you wish to receive an invoice, or hit Enter to skip:");
             // Console.Write(">>> ");
-            var emailInput = Console.ReadLine();
             // Console.WriteLine()
             // if (String.IsNullOrEmpty(emailInput))
         }
