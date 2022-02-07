@@ -68,33 +68,22 @@ namespace StoreModel
             Console.WriteLine("B - go to shopping basket");
             Console.WriteLine("Q - quit");
             char selection = InputParser.PromptCharFromUser(inputOptions);
-            switch (selection)
-            {
-                case '1': 
-                    PrintAllVegetables(new PageDisplay(VegetableRepo.VegetableList, 1, 9));
-                    break;
-                case '2':
-                    PrintAllMeats(new PageDisplay(MeatRepo.MeatList, 1, 9));
-                    break;
-                case '3':
-                    PrintAllBeverages(new PageDisplay(BeverageRepo.BeverageList, 1, 9));
-                    break;
-                case '4':
-                    PrintAllCandy(new PageDisplay(CandyRepo.CandyList, 1, 9));
-                    break;
-                case 'b':
-                case 'B':
-                    ShowBasket(new PageDisplay(Basket.BasketList, 1, 9));
-                    break;
-                case 'q':
-                case 'Q':
+            if (selection == '1')
+                    PrintVegetablePage(new PageDisplay(VegetableRepo.VegetableList, 1, 9));
+            if (selection == '2')
+                    PrintMeatPage(new PageDisplay(MeatRepo.MeatList, 1, 9));
+            if (selection == '3')
+                    PrintBeveragePage(new PageDisplay(BeverageRepo.BeverageList, 1, 9));
+            if (selection == '4')
+                    PrintCandyPage(new PageDisplay(CandyRepo.CandyList, 1, 9));
+            if (selection == 'b' || selection == 'B')
+                PrintBasketPage(new PageDisplay(Basket.BasketList, 1, 9));
+            if (selection == 'q' || selection == 'Q')
                     Console.Clear();
                     Environment.Exit(0);
-                    break;
-            }
         }
 
-        public void PrintAllVegetables(PageDisplay currentPage)
+        public void PrintVegetablePage(PageDisplay currentPage)
         {
             var inputOptions = new List<char>() {'b', 'B', ',', '.'};
             int entryCounter = 1;
@@ -114,13 +103,13 @@ namespace StoreModel
             else
                 Console.WriteLine("\nEnter the number of a product to add to basket, press , and . to navigate between pages or B to go back");
             char selection = InputParser.PromptCharFromUser(inputOptions);
-            if (selection == 'b')
+            if (selection == 'b' || selection == 'B')
                 HomeMenu();
             if (selection == ',')
-                PrintAllVegetables(new PageDisplay(VegetableRepo.VegetableList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
+                PrintVegetablePage(new PageDisplay(VegetableRepo.VegetableList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
             if (selection == '.')
                 {
-                PrintAllVegetables(new PageDisplay(VegetableRepo.VegetableList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
+                PrintVegetablePage(new PageDisplay(VegetableRepo.VegetableList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
                 } 
             else
                 {
@@ -132,13 +121,13 @@ namespace StoreModel
                 }
         }
         
-        public void PrintAllBeverages(PageDisplay currentPage)
+        public void PrintBeveragePage(PageDisplay currentPage)
         {
             var inputOptions = new List<char>() {'b', 'B', ',', '.'};
             int entryCounter = 1;
             int totalPages = currentPage.CalculateTotalPages(BeverageRepo.BeverageList.Count);
             Console.Clear();
-            Console.WriteLine($"Beverages\tPage {currentPage.PageNumber} of {totalPages}\n");
+            Console.WriteLine($"BEVERAGES\tPage {currentPage.PageNumber} of {totalPages}\n");
             Console.WriteLine("##  | " + String.Format(LineFormatting, BeverageRepo.ProductKeys)+"\n");
             foreach (Beverage entry in currentPage.BeverageItems)
             {
@@ -152,12 +141,12 @@ namespace StoreModel
             else
                 Console.WriteLine("\nEnter the number of a product to add to basket, press , and . to navigate between pages or B to go back");
             char selection = InputParser.PromptCharFromUser(inputOptions);
-            if (selection == 'b')
+            if (selection == 'b' || selection == 'B')
                 HomeMenu();
             if (selection == ',')
-                PrintAllBeverages(new PageDisplay(BeverageRepo.BeverageList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
+                PrintBeveragePage(new PageDisplay(BeverageRepo.BeverageList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
             if (selection == '.')
-                PrintAllBeverages(new PageDisplay(BeverageRepo.BeverageList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
+                PrintBeveragePage(new PageDisplay(BeverageRepo.BeverageList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
             else
                 {
                 int index = InputParser.GetIntFromChar(selection) - 1;
@@ -168,13 +157,13 @@ namespace StoreModel
                 }
         }
 
-         public void PrintAllMeats(PageDisplay currentPage)
+         public void PrintMeatPage(PageDisplay currentPage)
         {
             var inputOptions = new List<char>() {'b', 'B', ',', '.'};
             int entryCounter = 1;
             int totalPages = currentPage.CalculateTotalPages(MeatRepo.MeatList.Count);
             Console.Clear();
-            Console.WriteLine($"Meats\tPage {currentPage.PageNumber} of {totalPages}\n");
+            Console.WriteLine($"MEAT\tPage {currentPage.PageNumber} of {totalPages}\n");
             Console.WriteLine("##  | " + String.Format(LineFormatting, MeatRepo.ProductKeys)+"\n");
             foreach (Meat entry in currentPage.MeatItems)
             {
@@ -188,12 +177,12 @@ namespace StoreModel
             else
                 Console.WriteLine("\nEnter the number of a product to add to basket, press , and . to navigate between pages or B to go back");
             char selection = InputParser.PromptCharFromUser(inputOptions);
-            if (selection == 'b')
+            if (selection == 'b' || selection == 'B')
                 HomeMenu();
             if (selection == ',')
-                PrintAllMeats(new PageDisplay(MeatRepo.MeatList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
+                PrintMeatPage(new PageDisplay(MeatRepo.MeatList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
             if (selection == '.')
-                PrintAllMeats(new PageDisplay(MeatRepo.MeatList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
+                PrintMeatPage(new PageDisplay(MeatRepo.MeatList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
             else
                 {
                 int index = InputParser.GetIntFromChar(selection) - 1;
@@ -204,13 +193,13 @@ namespace StoreModel
                 }
         }
         
-        public void PrintAllCandy(PageDisplay currentPage)
+        public void PrintCandyPage(PageDisplay currentPage)
         {
             var inputOptions = new List<char>() {'b', 'B', ',', '.'};
             int entryCounter = 1;
             int totalPages = currentPage.CalculateTotalPages(CandyRepo.CandyList.Count);
             Console.Clear();
-            Console.WriteLine($"Candy\tPage {currentPage.PageNumber} of {totalPages}\n");
+            Console.WriteLine($"CANDY\tPage {currentPage.PageNumber} of {totalPages}\n");
             Console.WriteLine("##  | " + String.Format(LineFormatting, CandyRepo.ProductKeys)+"\n");
             foreach (Candy entry in currentPage.CandyItems)
             {
@@ -224,12 +213,12 @@ namespace StoreModel
             else
                 Console.WriteLine("\nEnter the number of a product to add to basket, press , and . to navigate between pages or B to go back");
             char selection = InputParser.PromptCharFromUser(inputOptions);
-            if (selection == 'b')
+            if (selection == 'b' || selection == 'B')
                 HomeMenu();
             if (selection == ',')
-                PrintAllCandy(new PageDisplay(CandyRepo.CandyList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
+                PrintCandyPage(new PageDisplay(CandyRepo.CandyList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
             if (selection == '.')
-                PrintAllCandy(new PageDisplay(CandyRepo.CandyList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
+                PrintCandyPage(new PageDisplay(CandyRepo.CandyList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
             else
                 {
                 int index = InputParser.GetIntFromChar(selection) - 1;
@@ -240,33 +229,31 @@ namespace StoreModel
                 }
         }
 
-        public void ShowBasket(PageDisplay currentPage)
+        public void PrintBasketPage(PageDisplay currentPage)
         {
-            var inputOptions = new List<char>() {'b','B','c','C'};
+            var inputOptions = new List<char>() {'b','B','c','C',',','.'};
             int entryCounter = 1;
-            int totalPages = currentPage.CalculateTotalPages(CandyRepo.CandyList.Count);
+            int totalPages = currentPage.CalculateTotalPages(Basket.BasketList.Count);
             Console.Clear();
-            Console.WriteLine($"Candy\tPage {currentPage.PageNumber} of {totalPages}\n");
+            Console.WriteLine($"YOUR BASKET\tPage {currentPage.PageNumber} of {totalPages}\n");
             Console.WriteLine(String.Format("{0,-30}|{1,12}","Item","Price") + "\n");
             foreach (BasketItem entry in currentPage.BasketItems)
             {
                 Console.WriteLine(entryCounter.ToString("D2") + "  | " +  String.Format("{0,-30}|{1,12}",entry.ToString().Split(",")));
                 entryCounter++;
             }
-            Console.WriteLine($"Your allocated budget: {UserBudget}");
+            Console.WriteLine($"\nAll items total: {Basket.SumOfAllItems}");
+            Console.WriteLine($"\nYour allocated budget: {UserBudget}");
             Console.WriteLine("\nPress C to proceed to checkout, or B to go back to the menu");
             char selection = InputParser.PromptCharFromUser(inputOptions);
-            switch (selection)
-            {
-            case 'b':
-            case 'B':
+            if (selection == 'b' || selection == 'B')
                 HomeMenu();
-                break;
-            case 'c':
-            case 'C':
+            if (selection == 'c' || selection == 'C')
                 Checkout(UserBudget);
-                break;
-            }
+            if (selection == ',')
+                PrintBasketPage(new PageDisplay(Basket.BasketList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
+            if (selection == '.')
+                PrintBasketPage(new PageDisplay(Basket.BasketList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages))); 
         }
                
         public void Checkout(decimal userBudget)
@@ -288,7 +275,7 @@ namespace StoreModel
                 Console.WriteLine("\n\n\tSorry, insufficient funds!");
                 Console.WriteLine("\n\n\tHit any key to go back");
                 InputParser.PromptForAnyKey();
-                ShowBasket(new PageDisplay(Basket.BasketList, 1, 9));
+                PrintBasketPage(new PageDisplay(Basket.BasketList, 1, 9));
             }
 
             // Console.WriteLine("\n\nEnter your email address if you wish to receive an invoice, or hit Enter to skip:");
