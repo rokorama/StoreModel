@@ -46,7 +46,7 @@ namespace StoreModel
         private void StartInterface()
         {
             Console.Clear();
-            Console.WriteLine(String.Format("\n\n\tSTORE INTERFACE THING\n\n\tcreated by @rokorama\n\n\n"));
+            Console.WriteLine(String.Format("\n\n\tROKORAMA FAKE STORE INC.\n\n\tgithub.com/rokorama\n\n\n"));
             Console.WriteLine("To begin, please enter your budget below.\n");
             UserBudget = InputParser.PromptDecimalFromUser();
             UserIsAbleToPurchase = (UserBudget > 0);
@@ -85,7 +85,7 @@ namespace StoreModel
                     break;
                 case 'b':
                 case 'B':
-                    ShowBasket(new PageDisplay(Basket.Items, 1, 9));
+                    ShowBasket(new PageDisplay(Basket.BasketList, 1, 9));
                     break;
                 case 'c':
                 case 'C':
@@ -171,7 +171,7 @@ namespace StoreModel
                 Basket.AddItemToBasket(basketItem);
                 HomeMenu();
                 }
-            }
+        }
 
          public void PrintAllMeats(PageDisplay currentPage)
         {
@@ -207,7 +207,7 @@ namespace StoreModel
                 Basket.AddItemToBasket(basketItem);
                 HomeMenu();
                 }
-            }
+        }
         
         public void PrintAllCandy(PageDisplay currentPage)
         {
@@ -243,11 +243,11 @@ namespace StoreModel
                 Basket.AddItemToBasket(basketItem);
                 HomeMenu();
                 }
-            }
+        }
 
         public void ShowBasket(PageDisplay currentPage)
         {
-            var inputOptions = new List<char>() {'b','B','c','C','r','R'};
+            var inputOptions = new List<char>() {'b','B','c','C'};
             int entryCounter = 1;
             int totalPages = currentPage.CalculateTotalPages(CandyRepo.CandyList.Count);
             Console.Clear();
@@ -263,21 +263,15 @@ namespace StoreModel
             char selection = InputParser.PromptCharFromUser(inputOptions);
             switch (selection)
             {
-                case 'b':
-                case 'B':
-                    HomeMenu();
-                    break;
-                case 'c':
-                case 'C':
-                    Checkout(UserBudget);
-                    break;
-                case 'r':
-                case 'R':
-                    Console.WriteLine("Please enter number of the item you wish to remove:");
-                    break;
+            case 'b':
+            case 'B':
+                HomeMenu();
+                break;
+            case 'c':
+            case 'C':
+                Checkout(UserBudget);
+                break;
             }
-
-
         }
                
         public void Checkout(decimal userBudget)
@@ -295,7 +289,11 @@ namespace StoreModel
                 InputParser.PromptForAnyKey();
             }
             else
-                Console.WriteLine("\n\n\tSorry, insufficient funds! Please check your basket and try again");
+            {
+                Console.WriteLine("\n\n\tSorry, insufficient funds!");
+                Console.WriteLine("\n\n\tHit any key to go back");
+                InputParser.PromptForAnyKey();
+            }
 
             // Console.WriteLine("\n\nEnter your email address if you wish to receive an invoice, or hit Enter to skip:");
             // Console.Write(">>> ");
