@@ -1,14 +1,19 @@
 using System;
 
-namespace StoreModel
+namespace StoreModel.Models
 {
     public class Beverage : Product
     {
-        public string Container { get; }
+        public string Container { get; set; }
 
         public Beverage(string name, decimal price, int sku, int weightGrams, string container) : base(name, price, sku, weightGrams)
         {
             Container = container;
+        }
+
+        private Beverage()
+        {
+
         }
 
         public override string ToString()

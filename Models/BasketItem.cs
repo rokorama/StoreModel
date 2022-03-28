@@ -1,6 +1,6 @@
 using System;
 
-namespace StoreModel
+namespace StoreModel.Models
 {
     public class BasketItem
     {
@@ -14,7 +14,7 @@ namespace StoreModel
 
         public override string  ToString()
         {
-            return $"{this.Name},{this.Price}";
+            return $"{Name},{Price}";
         }
     }
 

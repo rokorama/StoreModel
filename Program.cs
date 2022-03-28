@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using StoreModel.Contexts;
+using StoreModel.Models;
 
 namespace StoreModel
 {

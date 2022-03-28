@@ -1,17 +1,7 @@
-// Veikimo principai:
-// Įsijungus programą nurodote kiek turi pinigų. 
-// Jeigu pinigų yra daugiau nei 0 tada vartotojas gali pirkti prekes, jei pinigų neturi tada gali jas tik peržiūrėti.
-// Programoje turi būti galima išspausdinti kiekvienos prekės repozitorijos sąrašą individualiai(pvz.: pamatyti visas mėsos prekes)
-// Pasirenkant kokias prekes norit pirkti, jos įdedamos į pirkinių krepšelį.
-// Pirkinių krepšelį taip pat turi būti galimybė peržiūrėti.(prekes su kainom ir galutinę viso krepšelio kainą)
-// Apsisprendus pirkti turi būti patikrinama ar užtenka pinigų.
-// Jeigu pinigų užtenka tada sudaromas kvitas, į kurį įeina krepšelio informacija,galutinė kaina ir laikas kada buvo nupirkta.
-// Kvitas išsiunčiamas nurodytu el. paštu (Labiau advanced dalis, palieku ją patiems išsaiškinti kaip tai padaryti P.S. tai nėra taip baisu kaip gali pasirodyt)
-
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using StoreModel.Models;
+
 
 namespace StoreModel
 {
@@ -21,25 +11,21 @@ namespace StoreModel
         private bool UserIsAbleToPurchase { get; set; }
         private readonly string LineFormatting = "{0,-30}|  {1,-12}|  {2,-12}|  {3,-12}|  {4,-12}";
 
-        //figure out if these need to be public
-
-        public VegetableRepo VegetableRepo { get ; private set ; }
-        public BeverageRepo BeverageRepo { get ; private set ; }
-        public CandyRepo CandyRepo { get ; private set ; }
-        public MeatRepo MeatRepo { get ; private set ; }
+        private GenericRepository<Beverage>  BeverageRepo { get ; set ; }
+        private GenericRepository<Candy> CandyRepo { get ; set ; }
+        private GenericRepository<Meat> MeatRepo { get ; set ; }
+        private GenericRepository<Vegetable> VegetableRepo { get ; set ; }
         private Basket Basket { get; set; }
         private InputParser InputParser { get; }
         
         public StoreInterface()
         {
-            VegetableRepo = new VegetableRepo();
-            BeverageRepo = new BeverageRepo();
-            CandyRepo = new CandyRepo();
-            MeatRepo = new MeatRepo();
+            BeverageRepo = new GenericRepository<Beverage>();
+            CandyRepo = new GenericRepository<Candy>();
+            MeatRepo = new GenericRepository<Meat>();
+            VegetableRepo = new GenericRepository<Vegetable>();
             Basket = new Basket();
             InputParser = new InputParser();
-            // UserBudget = PromptUserForBudget();
-            UserIsAbleToPurchase = (UserBudget > 0);
             StartInterface();
         }
 
@@ -69,28 +55,30 @@ namespace StoreModel
             Console.WriteLine("Q - quit");
             char selection = InputParser.PromptCharFromUser(inputOptions);
             if (selection == '1')
-                    PrintVegetablePage(new PageDisplay(VegetableRepo.VegetableList, 1, 9));
-            if (selection == '2')
-                    PrintMeatPage(new PageDisplay(MeatRepo.MeatList, 1, 9));
-            if (selection == '3')
-                    PrintBeveragePage(new PageDisplay(BeverageRepo.BeverageList, 1, 9));
-            if (selection == '4')
-                    PrintCandyPage(new PageDisplay(CandyRepo.CandyList, 1, 9));
-            if (selection == 'b' || selection == 'B')
+                PrintVegetablePage(new PageDisplay(VegetableRepo.Items, 1, 9));
+            else if (selection == '2')
+                PrintMeatPage(new PageDisplay(MeatRepo.Items, 1, 9));
+            else if (selection == '3')
+                PrintBeveragePage(new PageDisplay(BeverageRepo.Items, 1, 9));
+            else if (selection == '4')
+                PrintCandyPage(new PageDisplay(CandyRepo.Items, 1, 9));
+            else if (selection == 'b' || selection == 'B')
                 PrintBasketPage(new PageDisplay(Basket.BasketList, 1, 9));
-            if (selection == 'q' || selection == 'Q')
-                    Console.Clear();
-                    Environment.Exit(0);
+            else if (selection == 'q' || selection == 'Q')
+            {
+                Console.Clear();
+                Environment.Exit(0);
+            }
         }
 
         public void PrintVegetablePage(PageDisplay currentPage)
         {
             var inputOptions = new List<char>() {'b', 'B', ',', '.'};
             int entryCounter = 1;
-            int totalPages = currentPage.CalculateTotalPages(VegetableRepo.VegetableList.Count);
+            int totalPages = currentPage.CalculateTotalPages(VegetableRepo.Items.Count);
             Console.Clear();
             Console.WriteLine($"VEGETABLES\tPage {currentPage.PageNumber} of {totalPages}\n");
-            Console.WriteLine("##  | " + String.Format(LineFormatting, VegetableRepo.ProductKeys)+"\n");
+            // Console.WriteLine("##  | " + String.Format(LineFormatting, VegetableRepo.ProductKeys)+"\n");
             foreach (Vegetable entry in currentPage.VegetableItems)
             {
                 Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
@@ -106,10 +94,10 @@ namespace StoreModel
             if (selection == 'b' || selection == 'B')
                 HomeMenu();
             if (selection == ',')
-                PrintVegetablePage(new PageDisplay(VegetableRepo.VegetableList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
+                PrintVegetablePage(new PageDisplay(VegetableRepo.Items, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
             if (selection == '.')
                 {
-                PrintVegetablePage(new PageDisplay(VegetableRepo.VegetableList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
+                PrintVegetablePage(new PageDisplay(VegetableRepo.Items, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
                 } 
             else
                 {
@@ -125,10 +113,10 @@ namespace StoreModel
         {
             var inputOptions = new List<char>() {'b', 'B', ',', '.'};
             int entryCounter = 1;
-            int totalPages = currentPage.CalculateTotalPages(BeverageRepo.BeverageList.Count);
+            int totalPages = currentPage.CalculateTotalPages(BeverageRepo.Items.Count);
             Console.Clear();
             Console.WriteLine($"BEVERAGES\tPage {currentPage.PageNumber} of {totalPages}\n");
-            Console.WriteLine("##  | " + String.Format(LineFormatting, BeverageRepo.ProductKeys)+"\n");
+            Console.WriteLine("##  | " + String.Format(LineFormatting, new string[] {}+"\n"));
             foreach (Beverage entry in currentPage.BeverageItems)
             {
                 Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
@@ -144,9 +132,9 @@ namespace StoreModel
             if (selection == 'b' || selection == 'B')
                 HomeMenu();
             if (selection == ',')
-                PrintBeveragePage(new PageDisplay(BeverageRepo.BeverageList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
+                PrintBeveragePage(new PageDisplay(BeverageRepo.Items, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
             if (selection == '.')
-                PrintBeveragePage(new PageDisplay(BeverageRepo.BeverageList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
+                PrintBeveragePage(new PageDisplay(BeverageRepo.Items, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
             else
                 {
                 int index = InputParser.GetIntFromChar(selection) - 1;
@@ -161,10 +149,10 @@ namespace StoreModel
         {
             var inputOptions = new List<char>() {'b', 'B', ',', '.'};
             int entryCounter = 1;
-            int totalPages = currentPage.CalculateTotalPages(MeatRepo.MeatList.Count);
+            int totalPages = currentPage.CalculateTotalPages(MeatRepo.Items.Count);
             Console.Clear();
             Console.WriteLine($"MEAT\tPage {currentPage.PageNumber} of {totalPages}\n");
-            Console.WriteLine("##  | " + String.Format(LineFormatting, MeatRepo.ProductKeys)+"\n");
+            // Console.WriteLine("##  | " + String.Format(LineFormatting, MeatRepo.ProductKeys)+"\n");
             foreach (Meat entry in currentPage.MeatItems)
             {
                 Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
@@ -180,9 +168,9 @@ namespace StoreModel
             if (selection == 'b' || selection == 'B')
                 HomeMenu();
             if (selection == ',')
-                PrintMeatPage(new PageDisplay(MeatRepo.MeatList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
+                PrintMeatPage(new PageDisplay(MeatRepo.Items, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
             if (selection == '.')
-                PrintMeatPage(new PageDisplay(MeatRepo.MeatList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
+                PrintMeatPage(new PageDisplay(MeatRepo.Items, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
             else
                 {
                 int index = InputParser.GetIntFromChar(selection) - 1;
@@ -197,10 +185,10 @@ namespace StoreModel
         {
             var inputOptions = new List<char>() {'b', 'B', ',', '.'};
             int entryCounter = 1;
-            int totalPages = currentPage.CalculateTotalPages(CandyRepo.CandyList.Count);
+            int totalPages = currentPage.CalculateTotalPages(CandyRepo.Items.Count);
             Console.Clear();
             Console.WriteLine($"CANDY\tPage {currentPage.PageNumber} of {totalPages}\n");
-            Console.WriteLine("##  | " + String.Format(LineFormatting, CandyRepo.ProductKeys)+"\n");
+            // Console.WriteLine("##  | " + String.Format(LineFormatting, CandyRepo.ProductKeys)+"\n");
             foreach (Candy entry in currentPage.CandyItems)
             {
                 Console.WriteLine(entryCounter.ToString("D2") + "  | " +  entry.ToString(LineFormatting));
@@ -216,9 +204,9 @@ namespace StoreModel
             if (selection == 'b' || selection == 'B')
                 HomeMenu();
             if (selection == ',')
-                PrintCandyPage(new PageDisplay(CandyRepo.CandyList, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
+                PrintCandyPage(new PageDisplay(CandyRepo.Items, (currentPage.PageNumber > 1 ? currentPage.PageNumber-1: 1), 9));
             if (selection == '.')
-                PrintCandyPage(new PageDisplay(CandyRepo.CandyList, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
+                PrintCandyPage(new PageDisplay(CandyRepo.Items, (currentPage.PageNumber < totalPages ? currentPage.PageNumber+1 : totalPages)));
             else
                 {
                 int index = InputParser.GetIntFromChar(selection) - 1;
@@ -242,7 +230,7 @@ namespace StoreModel
                 Console.WriteLine(entryCounter.ToString("D2") + "  | " +  String.Format("{0,-30}|{1,12}",entry.ToString().Split(",")));
                 entryCounter++;
             }
-            Console.WriteLine($"\nAll items total: {Basket.SumOfAllItems}");
+            Console.WriteLine($"\nAll items total: {Basket.PriceOfAllItems}");
             Console.WriteLine($"\nYour allocated budget: {UserBudget}");
             Console.WriteLine("\nPress C to proceed to checkout, or B to go back to the menu");
             char selection = InputParser.PromptCharFromUser(inputOptions);
@@ -258,10 +246,10 @@ namespace StoreModel
                
         public void Checkout(decimal userBudget)
         {
-            bool totalWithinBudget = (userBudget - Basket.SumOfAllItems >= 0);
+            bool totalWithinBudget = (userBudget - Basket.PriceOfAllItems >= 0);
 
             Console.WriteLine("\n\nCHECKOUT\n\n");
-            Console.WriteLine("\tAll items total: " + Basket.SumOfAllItems);
+            Console.WriteLine("\tAll items total: " + Basket.PriceOfAllItems);
             Console.WriteLine("\n\tYour budget:   " + userBudget);
             if (totalWithinBudget)
             {

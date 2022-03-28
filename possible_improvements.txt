@@ -1,0 +1,10 @@
+TO DO
+- an actual invoice system
+- fully implemented email sending system (mailkit)
+- T E S T S
+
+MAYBE DO
+- item removal from basket
+- ability to shop again after purchase
+- somehow refactor printing out pages
+- separate checkout class? (had it separate before)
